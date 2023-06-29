@@ -20,6 +20,8 @@ class VideoViewModel @Inject constructor(private val repository: VideoRepository
     val videos: LiveData<Resource<List<VideoDataItem?>>>
         get() = _videos
 
+    val selectedVideo = MutableLiveData<VideoDataItem>()
+
     init {
         viewModelScope.launch(Default) {
             getVideosData()

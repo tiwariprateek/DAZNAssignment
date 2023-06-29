@@ -18,5 +18,9 @@
         android:id="@+id/playbackFragment"
         android:name="com.example.daznassignment.ui.PlaybackFragment"
         android:label="fragment_playback"
-        tools:layout="@layout/fragment_playback" />
+        tools:layout="@layout/fragment_playback" >
+        <argument
+            android:name="video"
+            app:argType="com.example.daznassignment.data.VideoDataItem" />
+    </fragment>
 </navigation>

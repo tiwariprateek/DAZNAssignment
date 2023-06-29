@@ -2,11 +2,11 @@ package com.example.daznassignment.ui
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.daznassignment.R
 import com.example.daznassignment.adapters.VideoListAdapter
@@ -25,7 +25,7 @@ class HomeFragment : Fragment() {
 
     private lateinit var adapter: VideoListAdapter
 
-    private val viewModel by viewModels<VideoViewModel>()
+    private val viewModel: VideoViewModel by activityViewModels()
 
 
 
@@ -57,7 +57,7 @@ class HomeFragment : Fragment() {
             }
         }
     }
-    private fun onVideoClicked(video: VideoDataItem){
+    private fun onVideoClicked(selectedVideo: VideoDataItem){
         findNavController().navigate(R.id.action_homeFragment_to_playbackFragment)
     }
 

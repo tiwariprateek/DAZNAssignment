@@ -6,6 +6,7 @@ plugins {
     id 'com.google.dagger.hilt.android'
     id 'kotlin-parcelize'
 
+
 }
 
 android {
@@ -83,7 +84,7 @@ dependencies {
     implementation 'com.github.wseemann:FFmpegMediaMetadataRetriever-native:1.0.19'
 
     def mediaVersion = "1.0.1"
-    
+
         implementation "androidx.media3:media3-exoplayer:$mediaVersion"
         implementation "androidx.media3:media3-ui:$mediaVersion"
         implementation "androidx.media3:media3-exoplayer-dash:$mediaVersion"

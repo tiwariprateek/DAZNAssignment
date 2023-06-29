@@ -2,6 +2,7 @@ package com.example.daznassignment.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,11 +10,13 @@ import android.view.ViewGroup
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import com.example.daznassignment.R
 import com.example.daznassignment.adapters.VideoListAdapter
+import com.example.daznassignment.data.VideoDataItem
 import com.example.daznassignment.databinding.FragmentHomeBinding
 import com.example.daznassignment.databinding.FragmentPlaybackBinding
 
@@ -25,9 +28,11 @@ class PlaybackFragment : Fragment() {
     private var playWhenReady = true
     private var mediaItemIndex = 0
     private var playbackPosition = 0L
+    private val TAG = "PlaybackFragment"
 
 
-    private val viewModel by viewModels<VideoViewModel>()
+    private val viewModel: VideoViewModel by activityViewModels()
+    lateinit var videoData : VideoDataItem
 
 
     override fun onCreateView(
@@ -40,6 +45,11 @@ class PlaybackFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.selectedVideo.observe(viewLifecycleOwner){
+            Log.d(TAG, "onViewCreated: $it")
+            videoData = it
+        }
+
     }
 
     private fun initializePlayer() {
