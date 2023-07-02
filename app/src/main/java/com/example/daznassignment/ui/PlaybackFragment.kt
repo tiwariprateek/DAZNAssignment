@@ -14,9 +14,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.Tracks
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.analytics.AnalyticsListener
 import androidx.media3.exoplayer.analytics.AnalyticsListener.EventTime
+import androidx.media3.exoplayer.analytics.PlaybackStats
+import androidx.media3.exoplayer.analytics.PlaybackStatsListener
 import com.example.daznassignment.data.VideoDataItem
 import com.example.daznassignment.databinding.FragmentPlaybackBinding
 import com.example.daznassignment.utils.Resource
@@ -57,6 +60,7 @@ class PlaybackFragment : Fragment() {
         setFragmentResultListener("video_data"){_, bundle ->
             mediaItemIndex = bundle.getInt("index")
         }
+
         Log.d(TAG, "onViewCreated: viewmodel $viewModel")
         viewModel.videos.observe(viewLifecycleOwner){
             when(it) {
@@ -81,6 +85,28 @@ class PlaybackFragment : Fragment() {
 
 
     }
+    @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
+    private fun getExoAnalytics(exoPlayer: ExoPlayer){
+        exoPlayer.addAnalyticsListener(object :AnalyticsListener{
+            override fun onMediaItemTransition(
+                eventTime: EventTime,
+                mediaItem: MediaItem?,
+                reason: Int
+            ) {
+                super.onMediaItemTransition(eventTime, mediaItem, reason)
+                Log.d(TAG, "onMediaItemTransition: Next video")
+            }
+
+            override fun onIsPlayingChanged(eventTime: EventTime, isPlaying: Boolean) {
+                super.onIsPlayingChanged(eventTime, isPlaying)
+                if (isPlaying) Log.d(TAG, "onMediaItemTransition: Playing video")
+                else Log.d(TAG, "onMediaItemTransition: Paused video")
+            }
+
+        })
+
+
+    }
 
     private fun initializePlayer() {
         player = ExoPlayer.Builder(requireContext())
@@ -89,6 +115,7 @@ class PlaybackFragment : Fragment() {
                 binding.videoView.player = exoPlayer
                 exoPlayer.setMediaItems(videoList, mediaItemIndex, playbackPosition)
                 exoPlayer.playWhenReady = playWhenReady
+                getExoAnalytics(exoPlayer)
                 exoPlayer.prepare()
             }
     }
