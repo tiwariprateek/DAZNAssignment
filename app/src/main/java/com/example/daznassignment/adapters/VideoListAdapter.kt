@@ -14,7 +14,7 @@ import com.example.daznassignment.databinding.VideoRowBinding
 import wseemann.media.FFmpegMediaMetadataRetriever
 
 
-class VideoListAdapter(private val onNoteClicked: (VideoDataItem) -> Unit) :
+class VideoListAdapter(private val onVideoClicked: (VideoDataItem,Int) -> Unit) :
     ListAdapter<VideoDataItem, VideoListAdapter.CharacterViewHolder>(ComparatorDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
@@ -25,14 +25,14 @@ class VideoListAdapter(private val onNoteClicked: (VideoDataItem) -> Unit) :
     override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
         val video = getItem(position)
         video?.let {
-            holder.bind(it)
+            holder.bind(it,position)
         }
     }
 
     inner class CharacterViewHolder(private val binding: VideoRowBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(video: VideoDataItem) {
+        fun bind(video: VideoDataItem, index:Int) {
             val url = "https://static.videezy.com/system/resources/previews/000/000/248/original/http-bing.mp4"
             val requestOptions = RequestOptions()
             binding.videoTitle.text = video.name
@@ -43,7 +43,7 @@ class VideoListAdapter(private val onNoteClicked: (VideoDataItem) -> Unit) :
 //                .thumbnail(Glide.with(itemView.context).load(url))
                 .into(binding.videoThumbnail)
             binding.root.setOnClickListener {
-                onNoteClicked(video)
+                onVideoClicked(video,index)
             }
         }
 

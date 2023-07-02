@@ -5,8 +5,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.daznassignment.R
 import com.example.daznassignment.adapters.VideoListAdapter
@@ -25,7 +28,7 @@ class HomeFragment : Fragment() {
 
     private lateinit var adapter: VideoListAdapter
 
-    private val viewModel: VideoViewModel by activityViewModels()
+    private val viewModel by activityViewModels<VideoViewModel>()
 
 
 
@@ -41,6 +44,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d(TAG, "onViewCreated: viewmodel $viewModel")
         viewModel.videos.observe(viewLifecycleOwner) {
             when(it){
                 is Resource.Success -> {
@@ -57,7 +61,8 @@ class HomeFragment : Fragment() {
             }
         }
     }
-    private fun onVideoClicked(selectedVideo: VideoDataItem){
+    private fun onVideoClicked(selectedVideo: VideoDataItem, position:Int){
+        setFragmentResult("video_data", bundleOf("index" to position))
         findNavController().navigate(R.id.action_homeFragment_to_playbackFragment)
     }
 

@@ -3,27 +3,33 @@ package com.example.daznassignment.ui
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.setFragmentResultListener
 import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
-import com.example.daznassignment.R
-import com.example.daznassignment.adapters.VideoListAdapter
+import androidx.media3.exoplayer.analytics.AnalyticsListener
+import androidx.media3.exoplayer.analytics.AnalyticsListener.EventTime
 import com.example.daznassignment.data.VideoDataItem
-import com.example.daznassignment.databinding.FragmentHomeBinding
 import com.example.daznassignment.databinding.FragmentPlaybackBinding
+import com.example.daznassignment.utils.Resource
+import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 
+
+@AndroidEntryPoint
 class PlaybackFragment : Fragment() {
+    private val binding by lazy(LazyThreadSafetyMode.NONE) {
+        FragmentPlaybackBinding.inflate(layoutInflater)
+    }
     private var player: ExoPlayer? = null
-    private var _binding: FragmentPlaybackBinding? = null
-    private val binding get() = _binding!!
 
     private var playWhenReady = true
     private var mediaItemIndex = 0
@@ -31,24 +37,48 @@ class PlaybackFragment : Fragment() {
     private val TAG = "PlaybackFragment"
 
 
-    private val viewModel: VideoViewModel by activityViewModels()
-    lateinit var videoData : VideoDataItem
+    private val viewModel by activityViewModels<VideoViewModel>()
+    private lateinit var videoData :VideoDataItem
+    private var videoList = listOf<MediaItem>()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentPlaybackBinding.inflate(inflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.selectedVideo.observe(viewLifecycleOwner){
-            Log.d(TAG, "onViewCreated: $it")
-            videoData = it
+        setFragmentResultListener("video_data"){_, bundle ->
+            mediaItemIndex = bundle.getInt("index")
         }
+        Log.d(TAG, "onViewCreated: viewmodel $viewModel")
+        viewModel.videos.observe(viewLifecycleOwner){
+            when(it) {
+                is Resource.Success -> {
+                    videoList = it.data!!.map {
+                            video -> video?.uri?.let {v ->
+                            MediaItem.fromUri(v) }!!
+                    }
+
+                }
+                is Resource.Error -> {
+                    Snackbar.make(requireView(),it.message.toString(),Snackbar.LENGTH_LONG).show()
+                }
+                is Resource.Loading -> {
+                    Snackbar.make(requireView(),"Loading",Snackbar.LENGTH_SHORT).show()
+
+                }
+            }
+        }
+
+
+
 
     }
 
@@ -57,8 +87,7 @@ class PlaybackFragment : Fragment() {
             .build()
             .also { exoPlayer ->
                 binding.videoView.player = exoPlayer
-                val mediaItem = MediaItem.fromUri("https://storage.googleapis.com/wvmedia/clear/h264/tears/tears_uhd.mpd")
-                exoPlayer.setMediaItems(listOf(mediaItem), mediaItemIndex, playbackPosition)
+                exoPlayer.setMediaItems(videoList, mediaItemIndex, playbackPosition)
                 exoPlayer.playWhenReady = playWhenReady
                 exoPlayer.prepare()
             }
