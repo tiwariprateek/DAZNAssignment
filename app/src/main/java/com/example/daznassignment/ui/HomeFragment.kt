@@ -15,14 +15,17 @@ import com.example.daznassignment.R
 import com.example.daznassignment.adapters.VideoListAdapter
 import com.example.daznassignment.data.VideoDataItem
 import com.example.daznassignment.databinding.FragmentHomeBinding
+import com.example.daznassignment.utils.FRAGMENT_RESULT_DATA_KEY
+import com.example.daznassignment.utils.FRAGMENT_RESULT_REQUEST_KEY
 import com.example.daznassignment.utils.Resource
+import com.example.daznassignment.utils.TAG_HOMEFRAGMENT
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    private val TAG = "HomeFragment"
+    private val TAG = TAG_HOMEFRAGMENT
     private var _binding:FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
@@ -62,7 +65,7 @@ class HomeFragment : Fragment() {
         }
     }
     private fun onVideoClicked(selectedVideo: VideoDataItem, position:Int){
-        setFragmentResult("video_data", bundleOf("index" to position))
+        setFragmentResult(FRAGMENT_RESULT_REQUEST_KEY, bundleOf(FRAGMENT_RESULT_DATA_KEY to position))
         findNavController().navigate(R.id.action_homeFragment_to_playbackFragment)
     }
 
