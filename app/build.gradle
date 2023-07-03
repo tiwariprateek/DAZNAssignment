@@ -5,7 +5,7 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
     id 'kotlin-parcelize'
-
+    id 'com.google.gms.google-services'
 
 }
 
@@ -88,6 +88,13 @@ dependencies {
     implementation "androidx.media3:media3-exoplayer:$mediaVersion"
     implementation "androidx.media3:media3-ui:$mediaVersion"
     implementation "androidx.media3:media3-exoplayer-dash:$mediaVersion"
+
+    implementation(platform("com.google.firebase:firebase-bom:32.1.1"))
+    implementation "com.google.firebase:firebase-analytics-ktx"
+
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+
 
 
 }
