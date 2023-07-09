@@ -16,6 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class VideoViewModel @Inject constructor(private val repository: VideoRepository)  :ViewModel() {
 
+
     private val _videos = MutableLiveData<Resource<List<VideoDataItem?>>>()
     val videos: LiveData<Resource<List<VideoDataItem?>>>
         get() = _videos
@@ -43,4 +44,6 @@ class VideoViewModel @Inject constructor(private val repository: VideoRepository
             is Resource.Loading -> _videos.postValue(Resource.Loading())
         }
     }
+
+
 }

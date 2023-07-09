@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="playbackCount"
+            type="com.example.daznassignment.data.PlaybackCount" />
     </data>
     <LinearLayout
         android:orientation="vertical"
@@ -16,22 +19,35 @@
         android:layout_width="match_parent"
         android:layout_height="300dp" />
 
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+
         <TextView
+            tools:text="Pause count"
+            android:textSize="18sp"
             android:id="@+id/pause_count"
             android:layout_margin="12dp"
-            android:text="Pause Count :"
+            android:text='@{"Pause count:  " + playbackCount.pauseCount}'
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <TextView
+            tools:text="Next count"
+            android:textSize="18sp"
             android:id="@+id/forward_count"
             android:layout_margin="12dp"
-            android:text="Forward Count :"
+            android:text='@{"Forward count:  " + playbackCount.nextCount}'
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <TextView
+            tools:text="Previous count"
+            android:textSize="18sp"
             android:id="@+id/backward_count"
             android:layout_margin="12dp"
-            android:text="Backward Count :"
+            android:text='@{"Backward count:  " + playbackCount.prevCount}'
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>

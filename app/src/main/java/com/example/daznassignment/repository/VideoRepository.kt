@@ -8,6 +8,9 @@ import javax.inject.Inject
 
 class VideoRepository @Inject constructor(@ApplicationContext val context: Context) {
 
+
     suspend fun getVideoData() = readJsonFromLocal("video_uri.json", VideoData(),context)
+
+
 
 }
